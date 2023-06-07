@@ -1,3 +1,4 @@
+import 'package:fitsaw/screens/routines.dart';
 import 'package:flutter/material.dart';
 
 /// The Widget that configures your application.
@@ -9,7 +10,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Text("Hello World"),
+      home: Routines(),
     );
   }
 }
