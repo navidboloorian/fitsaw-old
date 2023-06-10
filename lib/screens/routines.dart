@@ -16,7 +16,7 @@ class _RoutinesState extends ConsumerState<Routines> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        toolbarHeight: 64,
+        toolbarHeight: 84,
         backgroundColor: CustomColors.lmScreenBackground,
 
         // navbar logo
