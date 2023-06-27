@@ -28,6 +28,13 @@ flutter:
   # Enable generation of localized Strings from arb files.
   generate: true
 
+  fonts: 
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
+
   assets:
     # Add assets from the images directory to the application.
     - assets/images/

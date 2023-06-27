@@ -5,6 +5,10 @@ class Themes {
   static ThemeData get light {
     return ThemeData(
       primaryColor: CustomColors.lmScreenBackground,
+      fontFamily: 'OpenSans',
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(fontSize: 16),
+      ),
     );
   }
 
