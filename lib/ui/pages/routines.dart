@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/basic_box.dart';
+import 'package:fitsaw/ui/shared/widgets/search_box.dart';
 import 'package:fitsaw/ui/shared/widgets/expandable_section.dart';
 
 import 'package:fitsaw/utils/custom_colors.dart';
@@ -13,6 +14,8 @@ class Routines extends ConsumerStatefulWidget {
 }
 
 class _RoutinesState extends ConsumerState<Routines> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,43 +32,34 @@ class _RoutinesState extends ConsumerState<Routines> {
           ),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Image.asset(
-            'assets/images/wallpaper.png',
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
+          SearchBox(_searchController),
+          const SizedBox(
+            height: 20,
           ),
-          Center(
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                ExpandableSection(
-                  "Your Routines",
-                  [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-                      child: BasicBox(
-                        Text(
-                          "testing",
-                          style: TextStyle(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-                      child: BasicBox(
-                        Text(
-                          "testing",
-                          style: TextStyle(),
-                        ),
-                      ),
-                    ),
-                  ],
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/wallpaper.png'),
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
+              constraints: const BoxConstraints.expand(),
+              child: const ExpandableSection(
+                "Your Routines",
+                [
+                  BasicBox(
+                    Text(
+                      "testing",
+                      style: TextStyle(),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          )
         ],
       ),
     );

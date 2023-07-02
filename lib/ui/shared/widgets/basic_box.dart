@@ -9,6 +9,8 @@ class BasicBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.9),
       padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -18,7 +20,7 @@ class BasicBox extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: widget,
+      child: Align(alignment: Alignment.centerLeft, child: widget),
     );
   }
 }
