@@ -86,10 +86,6 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
         ),
-        // spacer between list and title block
-        const SizedBox(
-          height: 20,
-        ),
         // use AnimatedSize to animate when list expands
         AnimatedSize(
           curve: Curves.linear,
@@ -104,7 +100,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
               children: widget.children,
             ),
           ),
-        )
+        ),
       ],
     );
   }

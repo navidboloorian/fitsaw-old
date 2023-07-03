@@ -7,10 +7,10 @@ abstract class CustomColors {
   static const Color fitsawOrange = Color(0xfff26923);
 
   // light mode
-  static const Color lmScreenBackground = Color(0xffffffff);
-  static const Color lmPrimaryBlockBackground = Color(0xffffffff);
+  static const Color lmScreenBackground = Colors.white;
+  static const Color lmPrimaryBlockBackground = Colors.white;
   static const Color lmSecondaryBlockBackground = Color(0xff939594);
-  static const Color lmPrimaryText = Color(0x00000000);
+  static const Color lmPrimaryText = Colors.black;
 
   // dark mode
   static const Color dmScreenBackground = Color(0xff0d1117);

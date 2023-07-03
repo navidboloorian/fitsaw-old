@@ -1,3 +1,4 @@
+import 'package:fitsaw/ui/shared/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/basic_box.dart';
@@ -7,7 +8,9 @@ import 'package:fitsaw/ui/shared/widgets/expandable_section.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 
 class Routines extends ConsumerStatefulWidget {
-  const Routines({super.key});
+  final List<String> pages;
+
+  const Routines({super.key, required this.pages});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RoutinesState();
@@ -19,6 +22,7 @@ class _RoutinesState extends ConsumerState<Routines> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 84,
@@ -47,20 +51,46 @@ class _RoutinesState extends ConsumerState<Routines> {
                 ),
               ),
               constraints: const BoxConstraints.expand(),
-              child: const ExpandableSection(
-                "Your Routines",
-                [
-                  BasicBox(
-                    Text(
-                      "testing",
-                      style: TextStyle(),
-                    ),
+              child: Column(
+                children: const [
+                  ExpandableSection(
+                    "Your Routines",
+                    [
+                      BasicBox(
+                        Text(
+                          "testing",
+                          style: TextStyle(),
+                        ),
+                      ),
+                      BasicBox(
+                        Text(
+                          "testing",
+                          style: TextStyle(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  ExpandableSection(
+                    "Downloaded Routines",
+                    [
+                      BasicBox(
+                        Text(
+                          "testing",
+                          style: TextStyle(),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           )
         ],
+      ),
+      bottomNavigationBar: BottomBar(
+        pages: widget.pages,
+        currentPage: widget.pages[1],
       ),
     );
   }
