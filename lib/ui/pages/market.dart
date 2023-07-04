@@ -4,16 +4,16 @@ import 'package:fitsaw/ui/shared/widgets/widgets.dart';
 
 import 'package:fitsaw/utils/custom_colors.dart';
 
-class Exercises extends ConsumerStatefulWidget {
+class Market extends ConsumerStatefulWidget {
   final List<String> pages;
 
-  const Exercises({super.key, required this.pages});
+  const Market({super.key, required this.pages});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ExercisesState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MarketState();
 }
 
-class _ExercisesState extends ConsumerState<Exercises> {
+class _MarketState extends ConsumerState<Market> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -33,10 +33,10 @@ class _ExercisesState extends ConsumerState<Exercises> {
           ),
         ),
       ),
-      body: Text('Exercises'),
+      body: Text('Market'),
       bottomNavigationBar: BottomBar(
         pages: widget.pages,
-        currentPage: widget.pages[0],
+        currentPage: widget.pages[2],
       ),
     );
   }

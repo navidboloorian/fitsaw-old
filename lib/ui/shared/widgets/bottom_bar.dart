@@ -21,7 +21,7 @@ class _BottomBarState extends State<BottomBar> {
       'market': 'assets/images/icons/market.png',
     };
 
-    List<BottomNavigationBarItem> barItems = <BottomNavigationBarItem>[];
+    List<GestureDetector> barItems = <GestureDetector>[];
     BorderSide borderSpecs = const BorderSide(width: 2, color: Colors.black);
 
     // creates list of navigation bar buttons
@@ -58,12 +58,18 @@ class _BottomBarState extends State<BottomBar> {
       }
 
       barItems.add(
-        BottomNavigationBarItem(
-          label: name,
+        // attatch a separate gesture detector for each tab button
+        GestureDetector(
+          onTap: () => Navigator.pushReplacementNamed(
+            context,
+
+            // name of the page corresponding to the button
+            widget.pages[i],
+          ),
           // had to make custom sections in order to use borders properly
-          icon: Container(
+          child: Container(
+            // each button takes a third of the screen
             width: MediaQuery.of(context).size.width / 3,
-            height: 56,
             decoration: BoxDecoration(
               color: buttonBackgroundColor,
               border: iconBorder,
@@ -77,24 +83,11 @@ class _BottomBarState extends State<BottomBar> {
     }
 
     return SizedBox(
-      height: 56,
-      // OverflowBox cuts off slight, one pixel overflow from BottomNavBar
-      child: OverflowBox(
-        maxHeight: double.infinity,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (index) => Navigator.pushReplacementNamed(
-            context,
-            widget.pages[index],
-          ),
-          elevation: 0,
-          selectedFontSize: 0,
-          unselectedFontSize: 0,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          backgroundColor: CustomColors.lmPrimaryBlockBackground,
-          items: barItems,
-        ),
+      height: 40,
+      // used Row instead of BottomNavBar because it was really annoying to
+      // adjust the height of the BottomNavBar
+      child: Row(
+        children: barItems,
       ),
     );
   }

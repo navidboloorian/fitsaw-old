@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fitsaw/ui/pages/routines.dart';
-import 'package:fitsaw/ui/pages/exercises.dart';
+import 'package:fitsaw/ui/pages/pages.dart';
 import 'package:fitsaw/utils/themes.dart';
 
 void main() async {
@@ -23,14 +22,23 @@ class App extends StatelessWidget {
       onGenerateRoute: (route) {
         // allows for access of routes by name
         // not using the route field of MaterialApp so the default animation can be removed
-        if (route.name == 'exercises') {
+
+        // exercises
+        if (route.name == pages[0]) {
           return PageRouteBuilder(
               pageBuilder: (_, __, ___) => const Exercises(pages: pages));
         }
 
-        if (route.name == 'routines') {
+        // routines
+        if (route.name == pages[1]) {
           return PageRouteBuilder(
               pageBuilder: (_, __, ___) => const Routines(pages: pages));
+        }
+
+        // market
+        if (route.name == pages[2]) {
+          return PageRouteBuilder(
+              pageBuilder: (_, __, ___) => const Market(pages: pages));
         }
 
         return null;
