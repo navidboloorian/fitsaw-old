@@ -1,10 +1,9 @@
-import 'package:fitsaw/fitsaw_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 
 class BottomBar extends StatefulWidget {
   final List<String> pages;
-  final String currentPage;
+  final String currentPage; // used to highlight the tab
 
   const BottomBar({super.key, required this.pages, required this.currentPage});
 
@@ -15,7 +14,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
-    // map icons to simply names
+    // map names to images
     const Map<String, String> icons = <String, String>{
       'exercises': 'assets/images/icons/exercises.png',
       'routines': 'assets/images/icons/routines.png',
@@ -28,12 +27,16 @@ class _BottomBarState extends State<BottomBar> {
     // creates list of navigation bar buttons
     for (int i = 0; i < icons.length; i++) {
       String name = icons.keys.elementAt(i);
+
+      // selected tab has a blue background
       Color buttonBackgroundColor = (name == widget.currentPage)
           ? CustomColors.fitsawBlue
           : CustomColors.lmPrimaryBlockBackground;
 
       late Border iconBorder;
 
+      // toggle certain portions of the border to avoid doubling up on one side
+      // ex: left has a border on the top and right
       switch (i) {
         case 0:
           {
@@ -57,6 +60,7 @@ class _BottomBarState extends State<BottomBar> {
       barItems.add(
         BottomNavigationBarItem(
           label: name,
+          // had to make custom sections in order to use borders properly
           icon: Container(
             width: MediaQuery.of(context).size.width / 3,
             height: 56,
@@ -74,6 +78,7 @@ class _BottomBarState extends State<BottomBar> {
 
     return SizedBox(
       height: 56,
+      // OverflowBox cuts off slight, one pixel overflow from BottomNavBar
       child: OverflowBox(
         maxHeight: double.infinity,
         child: BottomNavigationBar(
