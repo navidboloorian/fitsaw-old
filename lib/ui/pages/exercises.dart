@@ -36,10 +36,34 @@ class _ExercisesState extends ConsumerState<Exercises> {
           const SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: Container(
-              constraints: const BoxConstraints.expand(),
-            ),
+          const ExpandableSection(
+            "Your Exercises",
+            [
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
+              ),
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const ExpandableSection(
+            "Downloaded Exercises",
+            [
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
 
-import 'package:fitsaw/utils/custom_colors.dart';
-
 class Routines extends ConsumerStatefulWidget {
   final List<String> pages;
 
@@ -35,44 +33,35 @@ class _RoutinesState extends ConsumerState<Routines> {
           const SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: Container(
-              constraints: const BoxConstraints.expand(),
-              child: Column(
-                children: const [
-                  ExpandableSection(
-                    "Your Routines",
-                    [
-                      BasicBox(
-                        Text(
-                          "testing",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      BasicBox(
-                        Text(
-                          "testing",
-                          style: TextStyle(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  ExpandableSection(
-                    "Downloaded Routines",
-                    [
-                      BasicBox(
-                        Text(
-                          "testing",
-                          style: TextStyle(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+          const ExpandableSection(
+            "Your Routines",
+            [
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
               ),
-            ),
-          )
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const ExpandableSection(
+            "Downloaded Routines",
+            [
+              CustomContainer(
+                Text(
+                  "testing",
+                  style: TextStyle(),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       bottomNavigationBar: BottomBar(

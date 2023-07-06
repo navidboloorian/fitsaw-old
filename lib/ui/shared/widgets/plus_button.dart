@@ -11,7 +11,6 @@ class PlusButton extends StatelessWidget {
       onPressed: onPressed,
       icon: const Icon(
         Icons.add,
-        color: Colors.black,
       ),
     );
   }
