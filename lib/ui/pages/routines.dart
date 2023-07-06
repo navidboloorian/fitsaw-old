@@ -21,15 +21,11 @@ class _RoutinesState extends ConsumerState<Routines> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 84,
-        backgroundColor: CustomColors.lmScreenBackground,
-
         // navbar logo
         title: const Center(
           child: Image(
-            image: AssetImage('assets/images/logo_with_text.png'),
-            height: 64,
+            image: AssetImage('assets/images/logo.png'),
+            height: 56,
           ),
         ),
       ),
@@ -37,16 +33,10 @@ class _RoutinesState extends ConsumerState<Routines> {
         children: [
           SearchBox(_searchController),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/wallpaper.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
               constraints: const BoxConstraints.expand(),
               child: Column(
                 children: const [
@@ -67,7 +57,7 @@ class _RoutinesState extends ConsumerState<Routines> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   ExpandableSection(
                     "Downloaded Routines",
                     [

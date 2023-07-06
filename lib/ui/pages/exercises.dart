@@ -21,19 +21,28 @@ class _ExercisesState extends ConsumerState<Exercises> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 84,
-        backgroundColor: CustomColors.lmScreenBackground,
-
         // navbar logo
-        title: const Center(
-          child: Image(
-            image: AssetImage('assets/images/logo_with_text.png'),
-            height: 64,
-          ),
+        title: const Image(
+          image: AssetImage('assets/images/logo.png'),
+          height: 56,
         ),
+        actions: [
+          PlusButton(() => Navigator.pushNamed(context, 'view_exercise'))
+        ],
       ),
-      body: Text('Exercises'),
+      body: Column(
+        children: [
+          SearchBox(_searchController),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Container(
+              constraints: const BoxConstraints.expand(),
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomBar(
         pages: widget.pages,
         currentPage: widget.pages[0],

@@ -1,3 +1,4 @@
+import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class BasicBox extends StatelessWidget {
@@ -8,19 +9,22 @@ class BasicBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.9),
-      padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.black,
-          width: 1,
+    return Material(
+      elevation: 1,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding:
+            EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
+        decoration: BoxDecoration(
+          color: CustomColors.dmPrimaryBlockBackground,
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(5),
         ),
-        borderRadius: BorderRadius.circular(10),
+        child: Align(alignment: Alignment.centerLeft, child: widget),
       ),
-      child: Align(alignment: Alignment.centerLeft, child: widget),
     );
   }
 }

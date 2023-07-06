@@ -34,8 +34,10 @@ flutter:
         - asset: assets/fonts/OpenSans-Regular.ttf
         - asset: assets/fonts/OpenSans-Bold.ttf
           weight: 700
+    - family: FitsawIcons
+      fonts:
+        - asset: assets/fonts/Fitsaw.ttf
 
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
-    - assets/images/icons/

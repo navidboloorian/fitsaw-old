@@ -23,28 +23,31 @@ class App extends StatelessWidget {
         // allows for access of routes by name
         // not using the route field of MaterialApp so the default animation can be removed
 
-        // exercises
-        if (route.name == pages[0]) {
+        if (route.name == 'exercises') {
           return PageRouteBuilder(
               pageBuilder: (_, __, ___) => const Exercises(pages: pages));
         }
 
-        // routines
-        if (route.name == pages[1]) {
+        if (route.name == 'routines') {
           return PageRouteBuilder(
               pageBuilder: (_, __, ___) => const Routines(pages: pages));
         }
 
-        // market
-        if (route.name == pages[2]) {
+        if (route.name == 'market') {
           return PageRouteBuilder(
               pageBuilder: (_, __, ___) => const Market(pages: pages));
+        }
+
+        if (route.name == 'view_exercise') {
+          return MaterialPageRoute(
+            builder: (context) => const ViewExercise(),
+          );
         }
 
         return null;
       },
       home: const Routines(pages: pages),
-      theme: Themes.light,
+      theme: Themes.dark,
       debugShowCheckedModeBanner: false,
     );
   }

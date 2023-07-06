@@ -1,3 +1,4 @@
+import 'package:fitsaw/ui/shared/icons/fitsaw_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 
@@ -15,42 +16,47 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     // map names to images
-    const Map<String, String> icons = <String, String>{
-      'exercises': 'assets/images/icons/exercises.png',
-      'routines': 'assets/images/icons/routines.png',
-      'market': 'assets/images/icons/market.png',
+    const Map<String, Map> icons = <String, Map>{
+      'exercises': {
+        'icon': FitsawIcons.exercises,
+        'color': CustomColors.fitsawBlue,
+      },
+      'routines': {
+        'icon': FitsawIcons.routines,
+        'color': CustomColors.fitsawRed,
+      },
+      'market': {
+        'icon': FitsawIcons.market,
+        'color': CustomColors.fitsawGreen,
+      },
     };
 
     List<GestureDetector> barItems = <GestureDetector>[];
-    BorderSide borderSpecs = const BorderSide(width: 2, color: Colors.black);
 
     // creates list of navigation bar buttons
     for (int i = 0; i < icons.length; i++) {
       String name = icons.keys.elementAt(i);
+      Color iconColor = icons[name]!['color'];
+      Color iconBackgroundColor = CustomColors.dmScreenBackground;
 
-      // selected tab has a blue background
-      Color buttonBackgroundColor = (name == widget.currentPage)
-          ? CustomColors.fitsawBlue
-          : CustomColors.lmPrimaryBlockBackground;
-
-      late Border iconBorder;
+      if (widget.currentPage == name) {
+        iconColor = CustomColors.dmScreenBackground;
+        iconBackgroundColor = icons[name]!['color'];
+      }
 
       // toggle certain portions of the border to avoid doubling up on one side
       // ex: left has a border on the top and right
       switch (i) {
         case 0:
           {
-            iconBorder = Border(top: borderSpecs, right: borderSpecs);
             break;
           }
         case 1:
           {
-            iconBorder = Border(top: borderSpecs);
             break;
           }
         case 2:
           {
-            iconBorder = Border(top: borderSpecs, left: borderSpecs);
             break;
           }
         default:
@@ -68,14 +74,15 @@ class _BottomBarState extends State<BottomBar> {
           ),
           // had to make custom sections in order to use borders properly
           child: Container(
-            // each button takes a third of the screen
-            width: MediaQuery.of(context).size.width / 3,
+            width: 60,
+            height: 48,
             decoration: BoxDecoration(
-              color: buttonBackgroundColor,
-              border: iconBorder,
+              color: iconBackgroundColor,
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
             ),
-            child: Image.asset(
-              icons[name]!,
+            child: Icon(
+              icons[name]!['icon'],
+              color: iconColor,
             ),
           ),
         ),
@@ -83,10 +90,11 @@ class _BottomBarState extends State<BottomBar> {
     }
 
     return SizedBox(
-      height: 40,
+      height: 70,
       // used Row instead of BottomNavBar because it was really annoying to
       // adjust the height of the BottomNavBar
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: barItems,
       ),
     );

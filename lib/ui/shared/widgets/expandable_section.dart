@@ -18,6 +18,7 @@ class ExpandableSection extends StatefulWidget {
 
 class _ExpandableSectionState extends State<ExpandableSection> {
   bool expanded = false;
+  double titlePadding = 30;
   double? listHeight = 0;
 
   // default state is arrow pointing to the right (collapsed)
@@ -49,7 +50,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
               // sets background color
               Container(
             decoration: const BoxDecoration(
-              color: CustomColors.lmSecondaryBlockBackground,
+              color: CustomColors.dmSecondaryBlockBackground,
               border: Border(
                 top: BorderSide(color: Colors.black, width: 1),
                 bottom: BorderSide(color: Colors.black, width: 1),
@@ -61,7 +62,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                 Row(
               children: [
                 // used for padding
-                const SizedBox(width: 35),
+                SizedBox(width: titlePadding),
                 // text that is displayed on the block
                 Text(
                   widget.title,
@@ -81,7 +82,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                   ),
                 ),
                 // used for padding
-                const SizedBox(width: 35),
+                SizedBox(width: titlePadding),
               ],
             ),
           ),
@@ -93,11 +94,20 @@ class _ExpandableSectionState extends State<ExpandableSection> {
           child: SizedBox(
             height: listHeight,
             width: MediaQuery.of(context).size.width * 0.9,
-            child: ListView(
+            child: ListView.separated(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
+              // add 1 to length to account for separator after title
+              itemCount: widget.children.length + 1,
               physics: const AlwaysScrollableScrollPhysics(),
-              children: widget.children,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                // separator right after the title
+                if (index == 0) return const SizedBox.shrink();
+
+                return Container(child: widget.children[index - 1]);
+              },
             ),
           ),
         ),

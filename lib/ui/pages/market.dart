@@ -21,16 +21,10 @@ class _MarketState extends ConsumerState<Market> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 84,
-        backgroundColor: CustomColors.lmScreenBackground,
-
         // navbar logo
-        title: const Center(
-          child: Image(
-            image: AssetImage('assets/images/logo_with_text.png'),
-            height: 64,
-          ),
+        title: const Image(
+          image: AssetImage('assets/images/logo.png'),
+          height: 56,
         ),
       ),
       body: Text('Market'),
