@@ -47,11 +47,7 @@ class _ViewExerciseState extends State<ViewExercise> {
         ),
       ),
       CustomContainer(
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Tags (separated by commas)',
-            counterText: '',
-          ),
+        TagTextField(
           controller: _tagsController,
         ),
       ),
