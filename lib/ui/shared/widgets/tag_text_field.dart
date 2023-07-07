@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 
 class TagTextField extends StatefulWidget {
   final TextEditingController controller;
+  final List<String>? preExistingTags;
 
-  const TagTextField({super.key, required this.controller});
+  const TagTextField(
+      {super.key, required this.controller, this.preExistingTags});
 
   @override
   State<TagTextField> createState() => _TagTextFieldState();
 }
 
 class _TagTextFieldState extends State<TagTextField> {
-  final List<String> tagNames = <String>[];
+  // list of tag names, useful for other widgets to access
+  List<String> tagNames = <String>[];
 
   final List<TagButton> _tagButtons = <TagButton>[];
   final List<Color> _tagColors = <Color>[
@@ -22,12 +25,17 @@ class _TagTextFieldState extends State<TagTextField> {
     CustomColors.fitsawGreen,
   ];
 
+  // used to add a tag to the tag list
   void _addTag() {
+    // detect when a comma is entered
     if (widget.controller.text.contains(',')) {
       int delimIndex = widget.controller.text.indexOf(',');
+
+      // trim spaces to evaluate the text only
       String tag = widget.controller.text.substring(0, delimIndex).trim();
       bool tagExists = false;
 
+      // ensure duplicate tags don't exist
       for (TagButton tagButton in _tagButtons) {
         if (tagButton.name == tag) {
           tagExists = true;
@@ -43,13 +51,14 @@ class _TagTextFieldState extends State<TagTextField> {
             _tagButtons.add(
               TagButton(
                 tag,
-                removeTag: removeTag,
+                removeTag: _removeTag,
                 color: _tagColors[_tagButtons.length % _tagColors.length],
               ),
             );
           },
         );
 
+        // if there are chars to the right of the comma keep them
         if (delimIndex != widget.controller.text.length - 1) {
           widget.controller.text =
               widget.controller.text.substring(delimIndex + 1);
@@ -62,11 +71,14 @@ class _TagTextFieldState extends State<TagTextField> {
     }
   }
 
-  void removeTag(String name) {
+  // used by tagButtons to remove tags based on their names
+  // removal by names is another reason why it's important that names are unique
+  void _removeTag(String name) {
     for (TagButton tagButton in _tagButtons) {
       if (tagButton.name == name) {
         setState(
           () {
+            tagNames.remove(name);
             _tagButtons.remove(tagButton);
           },
         );
@@ -80,6 +92,24 @@ class _TagTextFieldState extends State<TagTextField> {
     super.initState();
 
     widget.controller.addListener(_addTag);
+
+    if (widget.preExistingTags != null) {
+      setState(
+        () {
+          tagNames = widget.preExistingTags!;
+
+          for (String tagName in tagNames) {
+            _tagButtons.add(
+              TagButton(
+                tagName,
+                removeTag: _removeTag,
+                color: _tagColors[_tagButtons.length % _tagColors.length],
+              ),
+            );
+          }
+        },
+      );
+    }
   }
 
   @override
