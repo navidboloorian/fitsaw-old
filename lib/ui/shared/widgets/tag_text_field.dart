@@ -27,7 +27,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   void _addTag() {
     // detect when a comma is entered
     if (_controller.text.contains(',')) {
-      final tagNamesList = ref.watch(tagListProvider.notifier);
+      final tagNamesProvider = ref.watch(tagListProvider.notifier);
       int delimIndex = _controller.text.indexOf(',');
 
       // trim spaces to evaluate the text only
@@ -46,7 +46,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
       if (!tagExists && RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(tag)) {
         setState(
           () {
-            tagNamesList.add(tag);
+            tagNamesProvider.add(tag);
             _tagButtons.add(
               TagButton(
                 tag,
@@ -72,13 +72,13 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   // used by tagButtons to remove tags based on their names
   // removal by names is another reason why it's important that names are unique
   void _removeTag(String name) {
-    final tagNamesList = ref.watch(tagListProvider.notifier);
+    final tagNamesProvider = ref.watch(tagListProvider.notifier);
 
     for (TagButton tagButton in _tagButtons) {
       if (tagButton.name == name) {
         setState(
           () {
-            tagNamesList.remove(name);
+            tagNamesProvider.remove(name);
             _tagButtons.remove(tagButton);
           },
         );
@@ -90,7 +90,8 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   @override
   void initState() {
     // list of tag names, useful for other widgets to access
-    final tagNamesList = ref.read(tagListProvider.notifier);
+    final tagNamesState = ref.read(tagListProvider);
+    final tagNamesProvider = ref.read(tagListProvider.notifier);
 
     super.initState();
 
@@ -99,9 +100,9 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
     if (widget.preExistingTags != null) {
       setState(
         () {
-          tagNamesList.set(widget.preExistingTags!);
+          tagNamesProvider.set(widget.preExistingTags!);
 
-          for (String tagName in tagNamesList.state) {
+          for (String tagName in tagNamesState) {
             _tagButtons.add(
               TagButton(
                 tagName,

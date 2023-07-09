@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/custom_container.dart';
 
 class SwitchButton extends ConsumerWidget {
-  // false = left, true = right
+  // left = false, right = true
   final String left;
   final String right;
   final dynamic provider;
@@ -18,6 +18,10 @@ class SwitchButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // read state
+    final switchButtonState = ref.watch(provider);
+
+    // alter state
     final swtichButtonProvider = ref.watch(provider.notifier);
 
     return CustomContainer(
@@ -29,7 +33,7 @@ class SwitchButton extends ConsumerWidget {
             child: Container(
               height: 32,
               decoration: BoxDecoration(
-                color: swtichButtonProvider.state
+                color: switchButtonState
                     ? Colors.transparent
                     : CustomColors.fitsawGreen,
                 borderRadius: const BorderRadius.only(
@@ -42,7 +46,7 @@ class SwitchButton extends ConsumerWidget {
                 child: Text(
                   left,
                   style: TextStyle(
-                    color: swtichButtonProvider.state
+                    color: switchButtonState
                         ? CustomColors.dmPrimaryText
                         : CustomColors.dmScreenBackground,
                   ),
@@ -55,7 +59,7 @@ class SwitchButton extends ConsumerWidget {
             child: Container(
               height: 32,
               decoration: BoxDecoration(
-                color: swtichButtonProvider.state
+                color: switchButtonState
                     ? CustomColors.fitsawGreen
                     : Colors.transparent,
                 borderRadius: const BorderRadius.only(
@@ -68,7 +72,7 @@ class SwitchButton extends ConsumerWidget {
                 child: Text(
                   right,
                   style: TextStyle(
-                    color: swtichButtonProvider.state
+                    color: switchButtonState
                         ? CustomColors.dmScreenBackground
                         : CustomColors.dmPrimaryText,
                   ),
