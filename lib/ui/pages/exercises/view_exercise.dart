@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
+import 'package:fitsaw/ui/shared/providers/switch_button_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ViewExercise extends StatefulWidget {
+class ViewExercise extends ConsumerStatefulWidget {
   const ViewExercise({super.key});
 
   @override
-  State<ViewExercise> createState() => _ViewExerciseState();
+  ConsumerState<ViewExercise> createState() => _ViewExerciseState();
 }
 
-class _ViewExerciseState extends State<ViewExercise> {
+class _ViewExerciseState extends ConsumerState<ViewExercise> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  // initialize notifiers for switches
+  late final _timedSwitchButton = switchButtonFamily('isTimed');
+  late final _weightedSwitchButton = switchButtonFamily('isWeighted');
 
   @override
   void initState() {
@@ -21,7 +27,7 @@ class _ViewExerciseState extends State<ViewExercise> {
 
   @override
   Widget build(BuildContext context) {
-    final List<CustomContainer> pageElements = [
+    final List<Widget> pageElements = [
       CustomContainer(
         TextFormField(
           decoration: const InputDecoration(
@@ -36,6 +42,16 @@ class _ViewExerciseState extends State<ViewExercise> {
             return null;
           },
         ),
+      ),
+      SwitchButton(
+        left: "Reps",
+        right: "Time",
+        provider: _timedSwitchButton,
+      ),
+      SwitchButton(
+        left: "Not Weighted",
+        right: "Weighted",
+        provider: _weightedSwitchButton,
       ),
       CustomContainer(
         TextFormField(

@@ -7,3 +7,4 @@ export 'search_box.dart';
 export 'bottom_bar.dart';
 export 'plus_button.dart';
 export 'tag_text_field.dart';
+export 'switch_button.dart';

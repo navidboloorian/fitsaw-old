@@ -90,7 +90,6 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   @override
   void initState() {
     // list of tag names, useful for other widgets to access
-    final tagNamesRead = ref.read(tagListProvider);
     final tagNamesList = ref.read(tagListProvider.notifier);
 
     super.initState();
@@ -102,7 +101,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
         () {
           tagNamesList.set(widget.preExistingTags!);
 
-          for (String tagName in tagNamesRead) {
+          for (String tagName in tagNamesList.state) {
             _tagButtons.add(
               TagButton(
                 tagName,
