@@ -13,15 +13,17 @@ class _ViewExerciseState extends State<ViewExercise> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _tagsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<CustomContainer> _pageElements = [
+    final List<CustomContainer> pageElements = [
       CustomContainer(
         TextFormField(
-          maxLines: null,
-          maxLength: 75,
           decoration: const InputDecoration(
             hintText: 'Exercise name',
             counterText: '',
@@ -46,10 +48,8 @@ class _ViewExerciseState extends State<ViewExercise> {
           controller: _descriptionController,
         ),
       ),
-      CustomContainer(
-        TagTextField(
-          controller: _tagsController,
-        ),
+      const CustomContainer(
+        TagTextField(),
       ),
     ];
 
@@ -68,9 +68,9 @@ class _ViewExerciseState extends State<ViewExercise> {
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
             child: ListView.separated(
-              itemCount: _pageElements.length,
+              itemCount: pageElements.length,
               separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) => _pageElements[index],
+              itemBuilder: (context, index) => pageElements[index],
             ),
           ),
         ),

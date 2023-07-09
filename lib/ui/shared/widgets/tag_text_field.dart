@@ -1,21 +1,19 @@
-import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:fitsaw/utils/custom_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitsaw/ui/shared/providers/tag_list_provider.dart';
 
-class TagTextField extends StatefulWidget {
-  final TextEditingController controller;
+class TagTextField extends ConsumerStatefulWidget {
   final List<String>? preExistingTags;
 
-  const TagTextField(
-      {super.key, required this.controller, this.preExistingTags});
+  const TagTextField({super.key, this.preExistingTags});
 
   @override
-  State<TagTextField> createState() => _TagTextFieldState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TagTextFieldState();
 }
 
-class _TagTextFieldState extends State<TagTextField> {
-  // list of tag names, useful for other widgets to access
-  List<String> tagNames = <String>[];
-
+class _TagTextFieldState extends ConsumerState<TagTextField> {
+  final TextEditingController _controller = TextEditingController();
   final List<TagButton> _tagButtons = <TagButton>[];
   final List<Color> _tagColors = <Color>[
     CustomColors.fitsawBlue,
@@ -28,11 +26,12 @@ class _TagTextFieldState extends State<TagTextField> {
   // used to add a tag to the tag list
   void _addTag() {
     // detect when a comma is entered
-    if (widget.controller.text.contains(',')) {
-      int delimIndex = widget.controller.text.indexOf(',');
+    if (_controller.text.contains(',')) {
+      final tagNamesList = ref.watch(tagListProvider.notifier);
+      int delimIndex = _controller.text.indexOf(',');
 
       // trim spaces to evaluate the text only
-      String tag = widget.controller.text.substring(0, delimIndex).trim();
+      String tag = _controller.text.substring(0, delimIndex).trim();
       bool tagExists = false;
 
       // ensure duplicate tags don't exist
@@ -47,7 +46,7 @@ class _TagTextFieldState extends State<TagTextField> {
       if (!tagExists && RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(tag)) {
         setState(
           () {
-            tagNames.add(tag);
+            tagNamesList.add(tag);
             _tagButtons.add(
               TagButton(
                 tag,
@@ -59,14 +58,13 @@ class _TagTextFieldState extends State<TagTextField> {
         );
 
         // if there are chars to the right of the comma keep them
-        if (delimIndex != widget.controller.text.length - 1) {
-          widget.controller.text =
-              widget.controller.text.substring(delimIndex + 1);
+        if (delimIndex != _controller.text.length - 1) {
+          _controller.text = _controller.text.substring(delimIndex + 1);
         } else {
-          widget.controller.text = '';
+          _controller.text = '';
         }
       } else {
-        widget.controller.text = '';
+        _controller.text = '';
       }
     }
   }
@@ -74,11 +72,13 @@ class _TagTextFieldState extends State<TagTextField> {
   // used by tagButtons to remove tags based on their names
   // removal by names is another reason why it's important that names are unique
   void _removeTag(String name) {
+    final tagNamesList = ref.watch(tagListProvider.notifier);
+
     for (TagButton tagButton in _tagButtons) {
       if (tagButton.name == name) {
         setState(
           () {
-            tagNames.remove(name);
+            tagNamesList.remove(name);
             _tagButtons.remove(tagButton);
           },
         );
@@ -89,16 +89,20 @@ class _TagTextFieldState extends State<TagTextField> {
 
   @override
   void initState() {
+    // list of tag names, useful for other widgets to access
+    final tagNamesRead = ref.read(tagListProvider);
+    final tagNamesList = ref.read(tagListProvider.notifier);
+
     super.initState();
 
-    widget.controller.addListener(_addTag);
+    _controller.addListener(_addTag);
 
     if (widget.preExistingTags != null) {
       setState(
         () {
-          tagNames = widget.preExistingTags!;
+          tagNamesList.set(widget.preExistingTags!);
 
-          for (String tagName in tagNames) {
+          for (String tagName in tagNamesRead) {
             _tagButtons.add(
               TagButton(
                 tagName,
@@ -117,12 +121,15 @@ class _TagTextFieldState extends State<TagTextField> {
     return Column(
       children: [
         TextFormField(
-          controller: widget.controller,
+          controller: _controller,
           decoration: const InputDecoration(
             hintText: 'Tags (separate with commas)',
           ),
         ),
-        const SizedBox(height: 5),
+        // only show the extra spacing if there are tags
+        _tagButtons.isNotEmpty
+            ? const SizedBox(height: 5)
+            : const SizedBox.shrink(),
         Align(
           alignment: Alignment.topLeft,
           child: Wrap(
@@ -154,7 +161,7 @@ class TagButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => removeTag(name),
       child: Container(
-        height: 25,
+        constraints: const BoxConstraints(minHeight: 25),
         padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
         decoration: BoxDecoration(
           border: Border.all(width: 1, color: color),
@@ -163,9 +170,12 @@ class TagButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              name,
-              style: TextStyle(color: color),
+            // use Flexible to wrap text in container
+            Flexible(
+              child: Text(
+                name,
+                style: TextStyle(color: color),
+              ),
             ),
             const SizedBox(width: 3),
             Icon(

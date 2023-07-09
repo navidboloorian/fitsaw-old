@@ -30,7 +30,7 @@ class _ExercisesState extends ConsumerState<Exercises> {
           PlusButton(() => Navigator.pushNamed(context, 'view_exercise'))
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           SearchBox(_searchController),
           const SizedBox(

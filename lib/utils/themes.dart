@@ -22,6 +22,7 @@ class Themes {
       ),
       inputDecorationTheme: const InputDecorationTheme(
         hintStyle: TextStyle(color: CustomColors.dmSecondaryText),
+        counterStyle: TextStyle(color: CustomColors.dmSecondaryText),
         isDense: true,
         contentPadding: EdgeInsets.all(0),
         border: InputBorder.none,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fitsaw/ui/pages/pages.dart';
 import 'package:fitsaw/utils/themes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  runApp(const App());
+  runApp(const ProviderScope(child: App()));
 }
 
 /// The Widget that configures your application.

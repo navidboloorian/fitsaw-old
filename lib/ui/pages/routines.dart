@@ -27,7 +27,7 @@ class _RoutinesState extends ConsumerState<Routines> {
           ),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           SearchBox(_searchController),
           const SizedBox(
