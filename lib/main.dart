@@ -1,20 +1,33 @@
+import 'package:fitsaw/db/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/pages/pages.dart';
 import 'package:fitsaw/utils/themes.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitsaw/db/models/models.dart';
+import 'package:realm/realm.dart';
 
 void main() async {
-  runApp(const ProviderScope(child: App()));
+  Realm realm = Realm(Configuration.local([Exercise.schema]));
+
+  // stores all the collections in the realm
+  Map<String, RealmResults> collections = {};
+
+  collections['exercises'] = realm.all<Exercise>();
+
+  runApp(ProviderScope(child: App(collections)));
 }
 
 /// The Widget that configures your application.
-class App extends StatelessWidget {
-  const App({
+class App extends ConsumerWidget {
+  Map<String, RealmResults> collections;
+
+  App(
+    this.collections, {
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // list of all navigable pages
     // pass these to other widgets to avoid mistakes on lower levels
     const List<String> pages = <String>['exercises', 'routines', 'market'];
@@ -26,7 +39,13 @@ class App extends StatelessWidget {
 
         if (route.name == 'exercises') {
           return PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const Exercises(pages: pages));
+            pageBuilder: (_, __, ___) => Exercises(
+              pages: pages,
+              dbHelper: DatabaseHelper<Exercise>(
+                collections['exercises'] as RealmResults<Exercise>,
+              ),
+            ),
+          );
         }
 
         if (route.name == 'routines') {
@@ -41,7 +60,11 @@ class App extends StatelessWidget {
 
         if (route.name == 'view_exercise') {
           return MaterialPageRoute(
-            builder: (context) => const ViewExercise(),
+            builder: (context) => ViewExercise(
+              dbHelper: DatabaseHelper<Exercise>(
+                collections['exercises'] as RealmResults<Exercise>,
+              ),
+            ),
           );
         }
 

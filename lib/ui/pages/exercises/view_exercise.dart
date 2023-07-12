@@ -1,11 +1,18 @@
+import 'package:fitsaw/db/database_helper.dart';
+import 'package:fitsaw/ui/shared/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
 import 'package:fitsaw/ui/shared/providers/switch_button_provider.dart';
+import 'package:fitsaw/db/models/models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitsaw/db/models/models.dart';
+import 'package:realm/realm.dart';
 
 class ViewExercise extends ConsumerStatefulWidget {
-  const ViewExercise({super.key});
+  final DatabaseHelper dbHelper;
+
+  const ViewExercise({super.key, required this.dbHelper});
 
   @override
   ConsumerState<ViewExercise> createState() => _ViewExerciseState();
@@ -27,6 +34,25 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
 
   @override
   Widget build(BuildContext context) {
+    void createExercise() {
+      String name = _nameController.text;
+      bool isTimed = ref.read(_timedSwitchButton);
+      bool isWeighted = ref.read(_weightedSwitchButton);
+      String description = _descriptionController.text;
+      List<String> tags = ref.read(tagListProvider);
+
+      widget.dbHelper.add(
+        Exercise(
+          ObjectId(),
+          name,
+          isTimed,
+          isWeighted,
+          description: description,
+          tags: tags,
+        ),
+      );
+    }
+
     final List<Widget> pageElements = [
       CustomContainer(
         TextFormField(
@@ -70,7 +96,6 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
     ];
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // navbar logo
         title: const Image(
@@ -83,10 +108,32 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
-            child: ListView.separated(
-              itemCount: pageElements.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) => pageElements[index],
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: pageElements.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
+                    itemBuilder: (context, index) => pageElements[index],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: createExercise,
+                  child: const CustomContainer(
+                    Center(
+                      child: Text(
+                        'Create',
+                        style:
+                            TextStyle(color: CustomColors.dmScreenBackground),
+                      ),
+                    ),
+                    color: CustomColors.fitsawBlue,
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
           ),
         ),

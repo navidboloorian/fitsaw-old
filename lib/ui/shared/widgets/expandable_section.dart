@@ -19,7 +19,7 @@ class ExpandableSection extends StatefulWidget {
 class _ExpandableSectionState extends State<ExpandableSection> {
   bool expanded = false;
   double titlePadding = 30;
-  double? listHeight = 0;
+  int listHeight = 0;
 
   // default state is arrow pointing to the right (collapsed)
   double turns = 3 / 4;
@@ -31,7 +31,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
         turns = 3 / 4;
       } else {
         // setting listHeight to null makes it expand to fit all children
-        listHeight = null;
+        listHeight = widget.children.length + 1;
         turns = 0;
       }
 
@@ -87,19 +87,15 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
         ),
-        // use AnimatedSize to animate when list expands
-        AnimatedSize(
-          curve: Curves.linear,
-          duration: const Duration(milliseconds: 150),
-          child: SizedBox(
-            height: listHeight,
-            width: MediaQuery.of(context).size.width * 0.9,
+        Flexible(
+          child: AnimatedSize(
+            curve: Curves.linear,
+            duration: const Duration(milliseconds: 150),
             child: ListView.separated(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               // add 1 to length to account for separator after title
-              itemCount: widget.children.length + 1,
-              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: listHeight,
               separatorBuilder: (BuildContext context, int index) =>
                   const SizedBox(height: 10),
               itemBuilder: (context, index) {

@@ -33,35 +33,6 @@ class _RoutinesState extends ConsumerState<Routines> {
           const SizedBox(
             height: 10,
           ),
-          const ExpandableSection(
-            "Your Routines",
-            [
-              CustomContainer(
-                Text(
-                  "testing",
-                  style: TextStyle(),
-                ),
-              ),
-              CustomContainer(
-                Text(
-                  "testing",
-                  style: TextStyle(),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const ExpandableSection(
-            "Downloaded Routines",
-            [
-              CustomContainer(
-                Text(
-                  "testing",
-                  style: TextStyle(),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
       bottomNavigationBar: BottomBar(
