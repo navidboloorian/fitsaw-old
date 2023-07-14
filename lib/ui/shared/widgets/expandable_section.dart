@@ -3,6 +3,8 @@
 /// Custom expandable is necessary in order to change the color of the header vs
 /// the list elements.
 
+import 'dart:math';
+
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,35 +21,48 @@ class ExpandableSection extends StatefulWidget {
 class _ExpandableSectionState extends State<ExpandableSection> {
   bool expanded = false;
   double titlePadding = 30;
-  int listHeight = 0;
+  int itemCount = 0;
 
   // default state is arrow pointing to the right (collapsed)
   double turns = 3 / 4;
 
   void toggleExpandable() {
-    setState(() {
-      if (expanded) {
-        listHeight = 0;
-        turns = 3 / 4;
-      } else {
-        // setting listHeight to null makes it expand to fit all children
-        listHeight = widget.children.length + 1;
-        turns = 0;
-      }
+    setState(
+      () {
+        if (expanded) {
+          itemCount = 0;
+          turns = 3 / 4;
+        } else {
+          // setting listHeight to null makes it expand to fit all children
+          itemCount = widget.children.length + 1;
+          turns = 0;
+        }
 
-      expanded = !expanded;
-    });
+        expanded = !expanded;
+      },
+    );
+  }
+
+  /// Ensures that the number of items displayed are synced with the number of
+  /// items in the list. Previously, when a new item was added the list count
+  /// wouldn't update if the list was already expanded.
+  void resetItemCount() {
+    if (expanded && widget.children.length != itemCount) {
+      itemCount = widget.children.length;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    resetItemCount();
+
     return Column(
       children: [
         // title block that collapses/expands the list on tap
         GestureDetector(
           onTap: toggleExpandable,
           child:
-              // sets background color
+              // sets title background color
               Container(
             decoration: const BoxDecoration(
               color: CustomColors.dmSecondaryBlockBackground,
@@ -87,24 +102,22 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
         ),
-        Flexible(
-          child: AnimatedSize(
-            curve: Curves.linear,
-            duration: const Duration(milliseconds: 150),
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              // add 1 to length to account for separator after title
-              itemCount: listHeight,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                // separator right after the title
-                if (index == 0) return const SizedBox.shrink();
+        AnimatedSize(
+          curve: Curves.linear,
+          duration: const Duration(milliseconds: 150),
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            // add 1 to length to account for separator after title
+            itemCount: itemCount,
+            separatorBuilder: (BuildContext context, int index) =>
+                const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              // separator right after the title
+              if (index == 0) return const SizedBox.shrink();
 
-                return Container(child: widget.children[index - 1]);
-              },
-            ),
+              return Container(child: widget.children[index - 1]);
+            },
           ),
         ),
       ],

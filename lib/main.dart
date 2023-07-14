@@ -19,9 +19,9 @@ void main() async {
 
 /// The Widget that configures your application.
 class App extends ConsumerWidget {
-  Map<String, RealmResults> collections;
+  final Map<String, RealmResults> collections;
 
-  App(
+  const App(
     this.collections, {
     super.key,
   });

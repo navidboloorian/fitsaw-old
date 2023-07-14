@@ -51,6 +51,8 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
           tags: tags,
         ),
       );
+
+      Navigator.pop(context);
     }
 
     final List<Widget> pageElements = [

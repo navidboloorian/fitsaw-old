@@ -18,6 +18,19 @@ class Exercises extends ConsumerStatefulWidget {
 class _ExercisesState extends ConsumerState<Exercises> {
   final TextEditingController _searchController = TextEditingController();
 
+  List<Widget> widgetList() {
+    List<Widget> list = [];
+
+    for (dynamic item in widget.dbHelper.items) {
+      item = item as Exercise;
+
+      // try using this key to make things better on streambuilder TODO
+      list.add(CustomContainer(key: ValueKey(item.id), Text(item.name)));
+    }
+
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,45 +45,43 @@ class _ExercisesState extends ConsumerState<Exercises> {
           PlusButton(() => Navigator.pushNamed(context, 'view_exercise'))
         ],
       ),
-      body: Column(
-        children: [
-          SearchBox(_searchController),
-          const SizedBox(
-            height: 10,
-          ),
-          StreamBuilder(
-            stream: widget.dbHelper.items.changes,
-            builder: (context, snapshot) {
-              List<Widget> widgetList() {
-                List<Widget> list = [];
+      body: StreamBuilder(
+        stream: widget.dbHelper.items.changes,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CustomContainer(Text('loading'));
+          }
 
-                for (dynamic item in widget.dbHelper.items) {
-                  item = item as Exercise;
-
-                  list.add(CustomContainer(Text(item.name)));
-                }
-
-                return list;
-              }
-
-              return Flexible(
-                child: ExpandableSection(
-                  "Your Exercises",
-                  widgetList(),
-                ),
-              );
-            },
-          ),
-        ],
+          return ListView(
+            children: [
+              SearchBox(_searchController),
+              const SizedBox(
+                height: 10,
+              ),
+              ExpandableSection(
+                "Your Exercises",
+                widgetList(),
+              ),
+              const SizedBox(height: 10),
+              const ExpandableSection(
+                "Downloaded Exercises",
+                [
+                  CustomContainer(
+                    Text(
+                      "testing",
+                      style: TextStyle(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: BottomBar(
         pages: widget.pages,
         currentPage: widget.pages[0],
       ),
-      floatingActionButton: GestureDetector(
-          onTap: () => widget.dbHelper
-              .add(Exercise(ObjectId(), "test 123", false, false)),
-          child: Container(color: Colors.blue, child: Icon(Icons.plus_one))),
     );
   }
 }
