@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
+import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:fitsaw/db/models/models.dart';
 import 'package:fitsaw/db/database_helper.dart';
-import 'package:realm/realm.dart';
 
 class Exercises extends ConsumerStatefulWidget {
   final List<String> pages;
@@ -24,8 +24,29 @@ class _ExercisesState extends ConsumerState<Exercises> {
     for (dynamic item in widget.dbHelper.items) {
       item = item as Exercise;
 
-      // try using this key to make things better on streambuilder TODO
-      list.add(CustomContainer(key: ValueKey(item.id), Text(item.name)));
+      list.add(
+        Dismissible(
+          key: ValueKey(item.id),
+          background: Container(
+            color: CustomColors.fitsawRed,
+            child: const Center(
+              child: Icon(
+                Icons.remove_circle_outline,
+                color: CustomColors.dmScreenBackground,
+              ),
+            ),
+          ),
+          onDismissed: (DismissDirection direction) =>
+              widget.dbHelper.delete(item),
+          child: Row(
+            children: [
+              SizedBox(width: MediaQuery.of(context).size.width * .05),
+              CustomContainer(Text(item.name)),
+              SizedBox(width: MediaQuery.of(context).size.width * .05),
+            ],
+          ),
+        ),
+      );
     }
 
     return list;
@@ -54,7 +75,7 @@ class _ExercisesState extends ConsumerState<Exercises> {
 
           return ListView(
             children: [
-              SearchBox(_searchController),
+              Center(child: SearchBox(_searchController)),
               const SizedBox(
                 height: 10,
               ),

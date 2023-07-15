@@ -3,10 +3,8 @@ import 'package:fitsaw/ui/shared/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
-import 'package:fitsaw/ui/shared/providers/switch_button_provider.dart';
 import 'package:fitsaw/db/models/models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitsaw/db/models/models.dart';
 import 'package:realm/realm.dart';
 
 class ViewExercise extends ConsumerStatefulWidget {
@@ -35,24 +33,26 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
   @override
   Widget build(BuildContext context) {
     void createExercise() {
-      String name = _nameController.text;
-      bool isTimed = ref.read(_timedSwitchButton);
-      bool isWeighted = ref.read(_weightedSwitchButton);
-      String description = _descriptionController.text;
-      List<String> tags = ref.read(tagListProvider);
+      if (_formKey.currentState!.validate()) {
+        String name = _nameController.text;
+        bool isTimed = ref.read(_timedSwitchButton);
+        bool isWeighted = ref.read(_weightedSwitchButton);
+        String description = _descriptionController.text;
+        List<String> tags = ref.read(tagListProvider);
 
-      widget.dbHelper.add(
-        Exercise(
-          ObjectId(),
-          name,
-          isTimed,
-          isWeighted,
-          description: description,
-          tags: tags,
-        ),
-      );
+        widget.dbHelper.add(
+          Exercise(
+            ObjectId(),
+            name,
+            isTimed,
+            isWeighted,
+            description: description,
+            tags: tags,
+          ),
+        );
 
-      Navigator.pop(context);
+        Navigator.pop(context);
+      }
     }
 
     final List<Widget> pageElements = [

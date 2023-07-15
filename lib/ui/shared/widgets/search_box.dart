@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fitsaw/ui/shared/widgets/custom_container.dart';
-import 'package:fitsaw/utils/custom_colors.dart';
 
 class SearchBox extends StatelessWidget {
   final TextEditingController controller;

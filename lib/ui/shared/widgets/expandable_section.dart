@@ -3,8 +3,6 @@
 /// Custom expandable is necessary in order to change the color of the header vs
 /// the list elements.
 
-import 'dart:math';
-
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -47,8 +45,8 @@ class _ExpandableSectionState extends State<ExpandableSection> {
   /// items in the list. Previously, when a new item was added the list count
   /// wouldn't update if the list was already expanded.
   void resetItemCount() {
-    if (expanded && widget.children.length != itemCount) {
-      itemCount = widget.children.length;
+    if (expanded) {
+      itemCount = widget.children.length + 1;
     }
   }
 
@@ -108,6 +106,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
           child: ListView.separated(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
+            physics: const ClampingScrollPhysics(),
             // add 1 to length to account for separator after title
             itemCount: itemCount,
             separatorBuilder: (BuildContext context, int index) =>
