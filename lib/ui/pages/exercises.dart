@@ -88,8 +88,6 @@ class _ExercisesState extends ConsumerState<Exercises> {
 
   @override
   Widget build(BuildContext context) {
-    print("query ${_searchQuery}");
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

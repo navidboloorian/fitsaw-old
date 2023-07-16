@@ -25,9 +25,23 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
   late final _timedSwitchButton = switchButtonFamily('isTimed');
   late final _weightedSwitchButton = switchButtonFamily('isWeighted');
 
-  @override
-  void initState() {
-    super.initState();
+  // state list that tracks the tags in the tag input field
+  List<String> _tags = [];
+
+  // methods to manage the _tags state
+  void _addTag(String tag) {
+    setState(() => _tags = [..._tags, tag]);
+  }
+
+  void _removeTag(String tag) {
+    setState(() {
+      _tags.remove(tag);
+      _tags = _tags;
+    });
+  }
+
+  void _setTags(List<String> tags) {
+    setState(() => _tags = tags);
   }
 
   @override
@@ -38,7 +52,7 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
         bool isTimed = ref.read(_timedSwitchButton);
         bool isWeighted = ref.read(_weightedSwitchButton);
         String description = _descriptionController.text;
-        List<String> tags = ref.read(tagListProvider);
+        List<String> tags = _tags;
 
         widget.dbHelper.add(
           Exercise(
@@ -92,8 +106,12 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
           controller: _descriptionController,
         ),
       ),
-      const CustomContainer(
-        TagTextField(),
+      CustomContainer(
+        TagTextField(
+          addTag: _addTag,
+          removeTag: _removeTag,
+          setTags: _setTags,
+        ),
       ),
     ];
 
