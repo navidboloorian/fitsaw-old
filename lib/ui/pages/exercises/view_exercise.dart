@@ -44,31 +44,42 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
     setState(() => _tags = tags);
   }
 
+  void _createExercise() {
+    if (_formKey.currentState!.validate()) {
+      String name = _nameController.text;
+      bool isTimed = ref.read(_timedSwitchButton);
+      bool isWeighted = ref.read(_weightedSwitchButton);
+      String description = _descriptionController.text;
+      List<String> tags = _tags;
+
+      widget.dbHelper.add(
+        Exercise(
+          ObjectId(),
+          name,
+          isTimed,
+          isWeighted,
+          description: description,
+          tags: tags,
+        ),
+      );
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: CustomColors.fitsawGreen,
+          duration: Duration(milliseconds: 500),
+          content: Text(
+            'Exercise Added!',
+            style: TextStyle(color: CustomColors.dmScreenBackground),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void createExercise() {
-      if (_formKey.currentState!.validate()) {
-        String name = _nameController.text;
-        bool isTimed = ref.read(_timedSwitchButton);
-        bool isWeighted = ref.read(_weightedSwitchButton);
-        String description = _descriptionController.text;
-        List<String> tags = _tags;
-
-        widget.dbHelper.add(
-          Exercise(
-            ObjectId(),
-            name,
-            isTimed,
-            isWeighted,
-            description: description,
-            tags: tags,
-          ),
-        );
-
-        Navigator.pop(context);
-      }
-    }
-
     final List<Widget> pageElements = [
       CustomContainer(
         TextFormField(
@@ -140,7 +151,7 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: createExercise,
+                  onTap: _createExercise,
                   child: const CustomContainer(
                     Center(
                       child: Text(

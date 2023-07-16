@@ -27,7 +27,7 @@ class _MarketState extends ConsumerState<Market> {
           height: 56,
         ),
       ),
-      body: Text('Market'),
+      body: const Text('Market'),
       bottomNavigationBar: BottomBar(
         pages: widget.pages,
         currentPage: widget.pages[2],
