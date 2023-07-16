@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitsaw/utils/custom_colors.dart';
+import 'package:fitsaw/ui/shared/widgets/tag_container.dart';
 
 class TagTextField extends ConsumerStatefulWidget {
   /// The list of tags that are added to the database are managed externally. As
@@ -25,7 +26,7 @@ class TagTextField extends ConsumerStatefulWidget {
 
 class _TagTextFieldState extends ConsumerState<TagTextField> {
   final TextEditingController _controller = TextEditingController();
-  final List<TagButton> _tagButtons = <TagButton>[];
+  final List<TagContainer> _tagButtons = <TagContainer>[];
   final List<Color> _tagColors = <Color>[
     CustomColors.fitsawBlue,
     CustomColors.fitsawPurple,
@@ -45,7 +46,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
       bool tagExists = false;
 
       // ensure duplicate tags don't exist
-      for (TagButton tagButton in _tagButtons) {
+      for (TagContainer tagButton in _tagButtons) {
         if (tagButton.name == tag) {
           tagExists = true;
           break;
@@ -60,7 +61,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
         setState(
           () {
             _tagButtons.add(
-              TagButton(
+              TagContainer(
                 tag,
                 removeTag: _removeTag,
                 color: _tagColors[_tagButtons.length % _tagColors.length],
@@ -84,7 +85,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   // used by tagButtons to remove tags based on their names
   // removal by names is another reason why it's important that names are unique
   void _removeTag(String name) {
-    for (TagButton tagButton in _tagButtons) {
+    for (TagContainer tagButton in _tagButtons) {
       if (tagButton.name == name) {
         // remove from outer list's tags
         widget.removeTag(name);
@@ -113,7 +114,7 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
         () {
           for (String tagName in widget.preExistingTags!) {
             _tagButtons.add(
-              TagButton(
+              TagContainer(
                 tagName,
                 removeTag: _removeTag,
                 color: _tagColors[_tagButtons.length % _tagColors.length],
@@ -149,52 +150,6 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class TagButton extends StatelessWidget {
-  final String name;
-  final Function(String) removeTag;
-  final Color color;
-
-  const TagButton(
-    this.name, {
-    super.key,
-    required this.removeTag,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => removeTag(name),
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 25),
-        padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
-        decoration: BoxDecoration(
-          border: Border.all(width: 1, color: color),
-          borderRadius: const BorderRadius.all(Radius.circular(2)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // use Flexible to wrap text in container
-            Flexible(
-              child: Text(
-                name,
-                style: TextStyle(color: color),
-              ),
-            ),
-            const SizedBox(width: 3),
-            Icon(
-              Icons.close,
-              size: 10,
-              color: color,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

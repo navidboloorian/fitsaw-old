@@ -1,3 +1,4 @@
+import 'package:fitsaw/ui/shared/widgets/tagged_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/shared/widgets/widgets.dart';
@@ -73,7 +74,9 @@ class _ExercisesState extends ConsumerState<Exercises> {
               child: Row(
                 children: [
                   SizedBox(width: MediaQuery.of(context).size.width * .05),
-                  CustomContainer(Text(item.name)),
+                  CustomContainer(item.tags.isEmpty
+                      ? Text(item.name)
+                      : TaggedWrapper(tags: item.tags, child: Text(item.name))),
                   SizedBox(width: MediaQuery.of(context).size.width * .05),
                 ],
               ),
