@@ -17,6 +17,20 @@ class Exercises extends ConsumerStatefulWidget {
 
 class _ExercisesState extends ConsumerState<Exercises> {
   final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _searchController.addListener(_setSearchQuery);
+  }
+
+  void _setSearchQuery() {
+    setState(() {
+      _searchQuery = _searchController.text;
+    });
+  }
 
   List<Widget> widgetList() {
     List<Widget> list = [];
@@ -24,29 +38,49 @@ class _ExercisesState extends ConsumerState<Exercises> {
     for (dynamic item in widget.dbHelper.items) {
       item = item as Exercise;
 
-      list.add(
-        Dismissible(
-          key: ValueKey(item.id),
-          background: Container(
-            color: CustomColors.fitsawRed,
-            child: const Center(
-              child: Icon(
-                Icons.remove_circle_outline,
-                color: CustomColors.dmScreenBackground,
+      bool containsSearchQuery = false;
+
+      if (item.name.toLowerCase().contains(_searchQuery)) {
+        containsSearchQuery = true;
+      }
+
+      if (!containsSearchQuery) {
+        for (String tag in item.tags) {
+          if (tag.toLowerCase().contains(_searchQuery)) {
+            containsSearchQuery = true;
+
+            break;
+          }
+        }
+      }
+
+      if (containsSearchQuery) {
+        list.add(
+          Center(
+            child: Dismissible(
+              key: ValueKey(item.id),
+              background: Container(
+                color: CustomColors.fitsawRed,
+                child: const Center(
+                  child: Icon(
+                    Icons.remove_circle_outline,
+                    color: CustomColors.dmScreenBackground,
+                  ),
+                ),
+              ),
+              onDismissed: (DismissDirection direction) =>
+                  widget.dbHelper.delete(item),
+              child: Row(
+                children: [
+                  SizedBox(width: MediaQuery.of(context).size.width * .05),
+                  CustomContainer(Text(item.name)),
+                  SizedBox(width: MediaQuery.of(context).size.width * .05),
+                ],
               ),
             ),
           ),
-          onDismissed: (DismissDirection direction) =>
-              widget.dbHelper.delete(item),
-          child: Row(
-            children: [
-              SizedBox(width: MediaQuery.of(context).size.width * .05),
-              CustomContainer(Text(item.name)),
-              SizedBox(width: MediaQuery.of(context).size.width * .05),
-            ],
-          ),
-        ),
-      );
+        );
+      }
     }
 
     return list;
@@ -54,6 +88,8 @@ class _ExercisesState extends ConsumerState<Exercises> {
 
   @override
   Widget build(BuildContext context) {
+    print("query ${_searchQuery}");
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -76,9 +112,7 @@ class _ExercisesState extends ConsumerState<Exercises> {
           return ListView(
             children: [
               Center(child: SearchBox(_searchController)),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               ExpandableSection(
                 "Your Exercises",
                 widgetList(),
