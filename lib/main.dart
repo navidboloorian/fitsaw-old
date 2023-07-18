@@ -1,4 +1,5 @@
 import 'package:fitsaw/db/database_helper.dart';
+import 'package:fitsaw/ui/shared/classes/page_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitsaw/ui/pages/pages.dart';
@@ -37,6 +38,12 @@ class App extends ConsumerWidget {
         // allows for access of routes by name
         // not using the route field of MaterialApp so the default animation can be removed
 
+        late PageArguments arguments;
+
+        if (route.arguments != null) {
+          arguments = (route.arguments as PageArguments);
+        }
+
         if (route.name == 'exercises') {
           return PageRouteBuilder(
             pageBuilder: (_, __, ___) => Exercises(
@@ -61,6 +68,8 @@ class App extends ConsumerWidget {
         if (route.name == 'view_exercise') {
           return MaterialPageRoute(
             builder: (context) => ViewExercise(
+              isNew: arguments.isNew!,
+              exercise: arguments.exercise,
               dbHelper: DatabaseHelper<Exercise>(
                 collections['exercises'] as RealmResults<Exercise>,
               ),

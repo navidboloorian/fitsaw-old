@@ -1,3 +1,4 @@
+import 'package:fitsaw/ui/shared/classes/page_arguments.dart';
 import 'package:fitsaw/ui/shared/widgets/tagged_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,9 +75,16 @@ class _ExercisesState extends ConsumerState<Exercises> {
               child: Row(
                 children: [
                   SizedBox(width: MediaQuery.of(context).size.width * .05),
-                  CustomContainer(item.tags.isEmpty
-                      ? Text(item.name)
-                      : TaggedWrapper(tags: item.tags, child: Text(item.name))),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context,
+                        arguments: PageArguments(isNew: false, exercise: item),
+                        'view_exercise'),
+                    child: CustomContainer(item.tags.isEmpty
+                        ? Text(item.name)
+                        : TaggedWrapper(
+                            tags: item.tags, child: Text(item.name))),
+                  ),
                   SizedBox(width: MediaQuery.of(context).size.width * .05),
                 ],
               ),
@@ -100,7 +108,13 @@ class _ExercisesState extends ConsumerState<Exercises> {
           height: 56,
         ),
         actions: [
-          PlusButton(() => Navigator.pushNamed(context, 'view_exercise'))
+          PlusButton(
+            () => Navigator.pushNamed(
+              context,
+              arguments: PageArguments(isNew: true),
+              'view_exercise',
+            ),
+          )
         ],
       ),
       body: StreamBuilder(

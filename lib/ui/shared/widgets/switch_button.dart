@@ -1,3 +1,4 @@
+import 'package:fitsaw/ui/shared/providers/switch_button_provider.dart';
 import 'package:fitsaw/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,26 +11,27 @@ class SwitchButton extends ConsumerWidget {
   final dynamic provider;
 
   const SwitchButton({
-    super.key,
+    Key? key,
     required this.left,
     required this.right,
     required this.provider,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // read state
-    final switchButtonState = ref.watch(provider);
+    final bool switchButtonState = ref.watch(provider);
 
     // alter state
-    final swtichButtonProvider = ref.watch(provider.notifier);
+    final SwitchButtonNotifier switchButtonProvider =
+        ref.watch(provider.notifier);
 
     return CustomContainer(
       padding: 0,
       Row(
         children: [
           GestureDetector(
-            onTap: () => swtichButtonProvider.set(false),
+            onTap: () => switchButtonProvider.set(false),
             child: Container(
               height: 32,
               decoration: BoxDecoration(
@@ -55,7 +57,7 @@ class SwitchButton extends ConsumerWidget {
             ),
           ),
           GestureDetector(
-            onTap: () => swtichButtonProvider.set(true),
+            onTap: () => switchButtonProvider.set(true),
             child: Container(
               height: 32,
               decoration: BoxDecoration(

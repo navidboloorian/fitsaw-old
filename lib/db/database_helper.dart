@@ -10,6 +10,10 @@ class DatabaseHelper<T extends RealmObject> {
     _realm.write(() => _realm.add(item));
   }
 
+  void update(T item) {
+    _realm.write(() => _realm.add(item, update: true));
+  }
+
   void delete(T item) {
     _realm.write(() => _realm.delete(item));
   }

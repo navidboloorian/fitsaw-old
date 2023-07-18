@@ -25,15 +25,9 @@ class TagTextField extends ConsumerStatefulWidget {
 }
 
 class _TagTextFieldState extends ConsumerState<TagTextField> {
-  final TextEditingController _controller = TextEditingController();
-  final List<TagContainer> _tagButtons = <TagContainer>[];
-  final List<Color> _tagColors = <Color>[
-    CustomColors.fitsawBlue,
-    CustomColors.fitsawPurple,
-    CustomColors.fitsawRed,
-    CustomColors.fitsawOrange,
-    CustomColors.fitsawGreen,
-  ];
+  late TextEditingController _controller;
+  late List<TagContainer> _tagButtons;
+  late List<Color> _tagColors;
 
   // used to add a tag to the tag list
   void _addTag() {
@@ -104,12 +98,19 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
   void initState() {
     super.initState();
 
+    _controller = TextEditingController();
+    _tagButtons = <TagContainer>[];
+    _tagColors = <Color>[
+      CustomColors.fitsawBlue,
+      CustomColors.fitsawPurple,
+      CustomColors.fitsawRed,
+      CustomColors.fitsawOrange,
+      CustomColors.fitsawGreen,
+    ];
+
     _controller.addListener(_addTag);
 
     if (widget.preExistingTags != null) {
-      // set outer list's tags
-      widget.setTags(widget.preExistingTags!);
-
       setState(
         () {
           for (String tagName in widget.preExistingTags!) {
@@ -124,6 +125,12 @@ class _TagTextFieldState extends ConsumerState<TagTextField> {
         },
       );
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override

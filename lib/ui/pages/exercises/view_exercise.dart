@@ -9,8 +9,11 @@ import 'package:realm/realm.dart';
 
 class ViewExercise extends ConsumerStatefulWidget {
   final DatabaseHelper dbHelper;
+  final bool isNew;
+  final Exercise? exercise;
 
-  const ViewExercise({super.key, required this.dbHelper});
+  const ViewExercise(
+      {super.key, required this.dbHelper, required this.isNew, this.exercise});
 
   @override
   ConsumerState<ViewExercise> createState() => _ViewExerciseState();
@@ -21,9 +24,8 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  // initialize notifiers for switches
-  late final _timedSwitchButton = switchButtonFamily('isTimed');
   late final _weightedSwitchButton = switchButtonFamily('isWeighted');
+  late final _timedSwitchButton = switchButtonFamily('isTimed');
 
   // state list that tracks the tags in the tag input field
   List<String> _tags = [];
@@ -44,17 +46,23 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
     setState(() => _tags = tags);
   }
 
-  void _createExercise() {
+  // if the exercise is new, adds to db; otherwise, updates db
+  void _upsertExercise() {
     if (_formKey.currentState!.validate()) {
+      ObjectId id = widget.isNew ? ObjectId() : widget.exercise!.id;
       String name = _nameController.text;
       bool isTimed = ref.read(_timedSwitchButton);
       bool isWeighted = ref.read(_weightedSwitchButton);
-      String description = _descriptionController.text;
       List<String> tags = _tags;
 
-      widget.dbHelper.add(
+      // want to make description null when empty
+      String? description = _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text;
+
+      widget.dbHelper.update(
         Exercise(
-          ObjectId(),
+          id,
           name,
           isTimed,
           isWeighted,
@@ -63,19 +71,58 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
         ),
       );
 
+      String snackbarMessage =
+          widget.isNew ? 'Exercise Created!' : 'Exercise Updated!';
+
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: CustomColors.fitsawGreen,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           content: Text(
-            'Exercise Added!',
-            style: TextStyle(color: CustomColors.dmScreenBackground),
+            snackbarMessage,
+            style: const TextStyle(color: CustomColors.dmScreenBackground),
           ),
         ),
       );
     }
+  }
+
+  void _populateExercise() {
+    // set all the values of the form with data from the db
+    SwitchButtonNotifier weightedSwitchButton =
+        ref.read(_weightedSwitchButton.notifier);
+    SwitchButtonNotifier timedSwitchButton =
+        ref.read(_timedSwitchButton.notifier);
+
+    _nameController.text = widget.exercise!.name;
+    _setTags(widget.exercise!.tags.toList());
+    if (widget.exercise!.description != null) {
+      _descriptionController.text = widget.exercise!.description!;
+    }
+
+    // use "Future" to avoid provider being updated before widget is built out
+    Future(() {
+      timedSwitchButton.set(widget.exercise!.isTimed);
+      weightedSwitchButton.set(widget.exercise!.isWeighted);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!widget.isNew) {
+      _populateExercise();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
   }
 
   @override
@@ -97,13 +144,13 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
         ),
       ),
       SwitchButton(
-        left: "Reps",
-        right: "Time",
+        left: 'Reps',
+        right: 'Time',
         provider: _timedSwitchButton,
       ),
       SwitchButton(
-        left: "Not Weighted",
-        right: "Weighted",
+        left: 'Not Weighted',
+        right: 'Weighted',
         provider: _weightedSwitchButton,
       ),
       CustomContainer(
@@ -122,6 +169,7 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
           addTag: _addTag,
           removeTag: _removeTag,
           setTags: _setTags,
+          preExistingTags: widget.isNew ? null : widget.exercise!.tags,
         ),
       ),
     ];
@@ -151,13 +199,13 @@ class _ViewExerciseState extends ConsumerState<ViewExercise> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: _createExercise,
-                  child: const CustomContainer(
+                  onTap: _upsertExercise,
+                  child: CustomContainer(
                     Center(
                       child: Text(
-                        'Create',
-                        style:
-                            TextStyle(color: CustomColors.dmScreenBackground),
+                        widget.isNew ? 'Create' : 'Update',
+                        style: const TextStyle(
+                            color: CustomColors.dmScreenBackground),
                       ),
                     ),
                     color: CustomColors.fitsawBlue,
